@@ -1,10 +1,16 @@
 package co.edu.autonoma.objetosperdidosapi.entity;
 
 import co.edu.autonoma.objetosperdidosapi.enums.EstadoReclamacion;
+import co.edu.autonoma.objetosperdidosapi.enums.TipoDecision;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "reclamaciones")
 public class ReclamacionEntity {
@@ -21,11 +27,7 @@ public class ReclamacionEntity {
     @JoinColumn(name = "reclamante_id", nullable = false)
     private UsuarioEntity reclamante;
 
-    @Column(
-            name = "evidencia_privada",
-            nullable = false,
-            columnDefinition = "text"
-    )
+    @Column(name = "evidencia_privada", nullable = false, columnDefinition = "text")
     private String evidenciaPrivada;
 
     @Enumerated(EnumType.STRING)
@@ -38,7 +40,35 @@ public class ReclamacionEntity {
     @Column(name = "fecha_actualizacion", nullable = false)
     private LocalDateTime fechaActualizacion;
 
-    public ReclamacionEntity() {
+    public ReclamacionEntity(
+            HallazgoEntity hallazgo,
+            UsuarioEntity reclamante,
+            String evidenciaPrivada) {
+
+        this.hallazgo = hallazgo;
+        this.reclamante = reclamante;
+        this.evidenciaPrivada = evidenciaPrivada;
+        this.estado = EstadoReclamacion.PENDIENTE;
+    }
+
+    public void registrarDecision(TipoDecision decision) {
+        if (this.estado != EstadoReclamacion.PENDIENTE) {
+            throw new IllegalStateException(
+                    "Solo se pueden decidir reclamaciones pendientes."
+            );
+        }
+
+        if (decision == null) {
+            throw new IllegalArgumentException(
+                    "La decisión no puede estar vacía."
+            );
+        }
+
+        if (decision == TipoDecision.APROBADA) {
+            this.estado = EstadoReclamacion.APROBADA;
+        } else if (decision == TipoDecision.RECHAZADA) {
+            this.estado = EstadoReclamacion.RECHAZADA;
+        }
     }
 
     @PrePersist
@@ -61,61 +91,5 @@ public class ReclamacionEntity {
     @PreUpdate
     public void antesDeActualizar() {
         fechaActualizacion = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public HallazgoEntity getHallazgo() {
-        return hallazgo;
-    }
-
-    public void setHallazgo(HallazgoEntity hallazgo) {
-        this.hallazgo = hallazgo;
-    }
-
-    public UsuarioEntity getReclamante() {
-        return reclamante;
-    }
-
-    public void setReclamante(UsuarioEntity reclamante) {
-        this.reclamante = reclamante;
-    }
-
-    public String getEvidenciaPrivada() {
-        return evidenciaPrivada;
-    }
-
-    public void setEvidenciaPrivada(String evidenciaPrivada) {
-        this.evidenciaPrivada = evidenciaPrivada;
-    }
-
-    public EstadoReclamacion getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoReclamacion estado) {
-        this.estado = estado;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public LocalDateTime getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
     }
 }

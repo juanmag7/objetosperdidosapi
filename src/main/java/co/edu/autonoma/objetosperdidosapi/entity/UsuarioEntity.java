@@ -2,9 +2,14 @@ package co.edu.autonoma.objetosperdidosapi.entity;
 
 import co.edu.autonoma.objetosperdidosapi.enums.RolUsuario;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "usuarios")
 public class UsuarioEntity {
@@ -32,69 +37,10 @@ public class UsuarioEntity {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
-    public UsuarioEntity() {
-    }
-
     @PrePersist
     public void antesDeGuardar() {
         if (fechaCreacion == null) {
             fechaCreacion = LocalDateTime.now();
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getCodigoInstitucional() {
-        return codigoInstitucional;
-    }
-
-    public void setCodigoInstitucional(String codigoInstitucional) {
-        this.codigoInstitucional = codigoInstitucional;
-    }
-
-    public RolUsuario getRol() {
-        return rol;
-    }
-
-    public void setRol(RolUsuario rol) {
-        this.rol = rol;
-    }
-
-    public boolean isActivo() {
-        return activo;
-    }
-
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
     }
 }
