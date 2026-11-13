@@ -1,9 +1,14 @@
 package co.edu.autonoma.objetosperdidosapi.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "detalles_verificacion")
 public class DetalleVerificacionEntity {
@@ -27,41 +32,9 @@ public class DetalleVerificacionEntity {
     @Column(name = "fecha_actualizacion", nullable = false)
     private LocalDateTime fechaActualizacion;
 
-    public DetalleVerificacionEntity() {
-    }
-
     @PrePersist
     @PreUpdate
     public void actualizarFecha() {
         fechaActualizacion = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public HallazgoEntity getHallazgo() {
-        return hallazgo;
-    }
-
-    public void setHallazgo(HallazgoEntity hallazgo) {
-        this.hallazgo = hallazgo;
-    }
-
-    public String getDescripcionVerificacionPrivada() {
-        return descripcionVerificacionPrivada;
-    }
-
-    public void setDescripcionVerificacionPrivada(
-            String descripcionVerificacionPrivada) {
-        this.descripcionVerificacionPrivada = descripcionVerificacionPrivada;
-    }
-
-    public LocalDateTime getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
     }
 }
