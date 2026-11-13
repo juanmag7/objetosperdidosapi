@@ -17,34 +17,28 @@ public class ReclamacionController {
     private final ReclamacionService reclamacionService;
 
     @PostMapping
-    public ResponseEntity<ReclamacionResponse> crear(
-            @RequestBody CrearReclamacionRequest request) {
-
-        ReclamacionResponse respuesta =
-                reclamacionService.crear(request);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(respuesta);
+    public ResponseEntity<ReclamacionResponse> crear(@RequestBody CrearReclamacionRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(reclamacionService.crear(request));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReclamacionResponse> buscar(
-            @PathVariable Long id) {
-
-        return reclamacionService.buscar(id)
+            @PathVariable Long id, @RequestParam Long usuarioId) {
+        return reclamacionService.buscar(id, usuarioId)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/{id}/decision")
     public ResponseEntity<ReclamacionResponse> registrarDecision(
-            @PathVariable Long id,
-            @RequestBody RegistrarDecisionRequest request) {
+            @PathVariable Long id, @RequestBody RegistrarDecisionRequest request) {
+        return ResponseEntity.ok(reclamacionService.registrarDecision(id, request));
+    }
 
-        ReclamacionResponse respuesta =
-                reclamacionService.registrarDecision(id, request);
-
-        return ResponseEntity.ok(respuesta);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> retirar(
+            @PathVariable Long id, @RequestParam Long reclamanteId) {
+        reclamacionService.retirar(id, reclamanteId);
+        return ResponseEntity.noContent().build();
     }
 }

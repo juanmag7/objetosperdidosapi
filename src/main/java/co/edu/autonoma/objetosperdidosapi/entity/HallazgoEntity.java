@@ -64,6 +64,38 @@ public class HallazgoEntity {
         this.estado = EstadoHallazgo.REGISTRADO;
     }
 
+    // Actualiza los datos de un hallazgo que todavía no ha sido publicado.
+    public void actualizarDatos(
+            String titulo,
+            String categoria,
+            String descripcionPublica,
+            String lugarHallazgo,
+            LocalDateTime fechaHallazgo) {
+
+        if (this.estado != EstadoHallazgo.REGISTRADO) {
+            throw new IllegalStateException(
+                    "Solo se pueden actualizar hallazgos no publicados."
+            );
+        }
+
+        this.titulo = titulo;
+        this.categoria = categoria;
+        this.descripcionPublica = descripcionPublica;
+        this.lugarHallazgo = lugarHallazgo;
+        this.fechaHallazgo = fechaHallazgo;
+    }
+
+    // Marca el hallazgo como entregado.
+    public void marcarComoEntregado() {
+        if (this.estado != EstadoHallazgo.PUBLICADO) {
+            throw new IllegalStateException(
+                    "Solo se pueden entregar hallazgos publicados."
+            );
+        }
+
+        this.estado = EstadoHallazgo.ENTREGADO;
+    }
+
     @PrePersist
     public void antesDeGuardar() {
         LocalDateTime ahora = LocalDateTime.now();

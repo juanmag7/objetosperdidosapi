@@ -51,7 +51,9 @@ public class ReclamacionEntity {
         this.estado = EstadoReclamacion.PENDIENTE;
     }
 
+    // Aprueba o rechaza una reclamación pendiente.
     public void registrarDecision(TipoDecision decision) {
+
         if (this.estado != EstadoReclamacion.PENDIENTE) {
             throw new IllegalStateException(
                     "Solo se pueden decidir reclamaciones pendientes."
@@ -68,6 +70,24 @@ public class ReclamacionEntity {
             this.estado = EstadoReclamacion.APROBADA;
         } else if (decision == TipoDecision.RECHAZADA) {
             this.estado = EstadoReclamacion.RECHAZADA;
+        }
+    }
+
+    // Retira una reclamación que todavía está pendiente.
+    public void retirar() {
+        if (this.estado != EstadoReclamacion.PENDIENTE) {
+            throw new IllegalStateException(
+                    "Solo se pueden retirar reclamaciones pendientes."
+            );
+        }
+
+        this.estado = EstadoReclamacion.RETIRADA;
+    }
+
+    // Cierra una reclamación pendiente cuando se entrega el objeto.
+    public void cerrarPorEntrega() {
+        if (this.estado == EstadoReclamacion.PENDIENTE) {
+            this.estado = EstadoReclamacion.CERRADA;
         }
     }
 
