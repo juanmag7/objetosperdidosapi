@@ -2,9 +2,14 @@ package co.edu.autonoma.objetosperdidosapi.entity;
 
 import co.edu.autonoma.objetosperdidosapi.enums.TipoDecision;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "decisiones_reclamacion")
 public class DecisionReclamacionEntity {
@@ -28,10 +33,19 @@ public class DecisionReclamacionEntity {
     @Column(name = "observacion", columnDefinition = "text")
     private String observacion;
 
-    @Column(name = "fecha_decision", nullable = false, updatable = false)
+    @Column(name = "fecha_decision", nullable = false)
     private LocalDateTime fechaDecision;
 
-    public DecisionReclamacionEntity() {
+    public DecisionReclamacionEntity(
+            ReclamacionEntity reclamacion,
+            UsuarioEntity decididoPor,
+            TipoDecision decision,
+            String observacion) {
+
+        this.reclamacion = reclamacion;
+        this.decididoPor = decididoPor;
+        this.decision = decision;
+        this.observacion = observacion;
     }
 
     @PrePersist
@@ -39,53 +53,5 @@ public class DecisionReclamacionEntity {
         if (fechaDecision == null) {
             fechaDecision = LocalDateTime.now();
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public ReclamacionEntity getReclamacion() {
-        return reclamacion;
-    }
-
-    public void setReclamacion(ReclamacionEntity reclamacion) {
-        this.reclamacion = reclamacion;
-    }
-
-    public UsuarioEntity getDecididoPor() {
-        return decididoPor;
-    }
-
-    public void setDecididoPor(UsuarioEntity decididoPor) {
-        this.decididoPor = decididoPor;
-    }
-
-    public TipoDecision getDecision() {
-        return decision;
-    }
-
-    public void setDecision(TipoDecision decision) {
-        this.decision = decision;
-    }
-
-    public String getObservacion() {
-        return observacion;
-    }
-
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
-    }
-
-    public LocalDateTime getFechaDecision() {
-        return fechaDecision;
-    }
-
-    public void setFechaDecision(LocalDateTime fechaDecision) {
-        this.fechaDecision = fechaDecision;
     }
 }
